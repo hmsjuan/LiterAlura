@@ -228,6 +228,16 @@ public class MenuPrincipal {
         jsonObject = new JSONObject(resultsArray.getJSONObject(numeroLibro).toString());
         datosLibro = convierteDatos.obtenerDatos(jsonObject.toString(), DatosLibro.class);
 
+        //Verificar si el libro ya esta registrado
+        Optional<Libro> libro = libroRepository.findById(datosLibro.idLibro());
+        if (libro.isPresent()) {
+            System.out.println("Libro ya esta  registrado");
+            System.out.println();
+            System.out.println(libro.get());
+            hacerPause();
+            return;
+        }
+
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> jsonMap = mapper.readValue(jsonObject.toString(), Map.class);
         String authorsJson = mapper.writeValueAsString((List<Map<String, Object>>) jsonMap.get("authors"));
